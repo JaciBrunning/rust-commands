@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use futures::FutureExt;
+use futures::{FutureExt, join};
 use rust_commands::*;
 use tokio::spawn;
 
@@ -53,6 +53,13 @@ async fn dual_subsystem_command(systems: (&mut Drivetrain, &mut Elevator)) {
     println!("Dual - Tick");
     tokio::time::sleep(Duration::from_millis(100)).await;
   }
+  // You can call other commands easily
+  systems.0.drive_path(Path).await;
+
+  // Or even a few at a time
+  let fut1 = systems.0.drive_path(Path);
+  let fut2 = systems.1.go_to_height(0.5);
+  join!(fut1, fut2);
   println!("Dual - Done!");
 }
 
@@ -76,5 +83,5 @@ pub async fn main() {
 
   perform!((systems.drivetrain, systems.elevator), Priority(10), pinbox!(dual_subsystem_command));
 
-  tokio::time::sleep(Duration::from_millis(2000)).await;
+  tokio::time::sleep(Duration::from_millis(5000)).await;
 }
