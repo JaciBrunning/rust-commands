@@ -1,0 +1,15 @@
+[package]
+name = "rust-commands"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+async-trait = "0.1.75"
+futures = "0.3.29"
+tokio = { version = "1.35.1", features = ["full"] }
+rust-commands-macros = { path = "rust-commands-macros" }
+
+[dev-dependencies]
+tokio-scoped = "0.2.0"
